@@ -20,3 +20,7 @@
 Программный модуль для выявления тональности высказываний по отношению к персонам Волгоградской области и достопримечательностям. 
 Можно использовать либо подход на основе правил и словарей, либо методы машинного обучения.
 Анализ тональности текста осуществляется с помощью библиотеки: `Dostoevsky` - https://github.com/bureaucratic-labs/dostoevsky
+
+## Команда
+<a href="https://github.com/tankistqazwsx"><img src="https://avatars0.githubusercontent.com/u/10173245?s=460&v=4" alt="tankistqazwsx" width="50" height="50"> </a> Безрученко А.Ю.
+<a href="https://github.com/Kolyamba-mamba"><img src="https://avatars0.githubusercontent.com/u/36818700?s=460&v=4" alt="Kolyamba-mamba" width="50" height="50"> </a> Бородин Н.Ю.
