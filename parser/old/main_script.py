@@ -1,3 +1,5 @@
+# encode: utf-8
+# этот файл — основной исполняемый файл парсера
 import re
 import datetime
 from time import sleep
@@ -13,6 +15,10 @@ from bs4 import BeautifulSoup as BS
 from safe_get import fetch_html
 from reactor_parse import scrapPage, getPrevPages, parse_html
 from util import getName, cutLastFrom, append_to_file
+
+url = "https://v1.ru/text/"
+r = requests.get(url)  
+parsed_content = BS(r.text)
 
 LAST_PAGE_CHECKED = ""
 

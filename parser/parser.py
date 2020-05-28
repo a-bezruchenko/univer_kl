@@ -1,17 +1,16 @@
+# encode: utf-8
+# этот файл содержит функции парсинга различных видов страниц
 import requests
 from bs4 import BeautifulSoup as BS
-
-url = 
-r = requests.get(url)  
-parsed_content = BS(r.text)
+from util import intTryParse, tryFunction
 
 # формат: список ссылок
 def quick_scrap_news_page(parsed_content):
     return list(map(
-                lambda x: x.find("a", class_="L7ay7")['href'],
+                lambda x: x.find("a")['href'],
                 parsed_content.find("div", class_="central-column-container").findAll("article")))
 
-# формат: [{"link"}]
+# формат: [{"link", "viewsCount", "likesCount"}]
 def scrap_news_page(parsed_content):
     news_column = parsed_content.find("div", class_="central-column-container")
     posts = news_column.findAll("article")
@@ -19,8 +18,11 @@ def scrap_news_page(parsed_content):
     for post in posts:
         try:
             temp_res = {}
-            title_block = post.find("a", class_="L7ay7")
-            temp_res["link"] = title_block["href"]
+            temp_res["link"] = post.findAll("a")[0]['href']
+            #temp_res["viewsCount"] = intTryParse(post.findAll("span")[0].text, 0)
+            #temp_res["commentsCount"] = intTryParse(post.findAll("span")[1].text, 0)
+            temp_res["viewsCount"] = tryFunction(lambda: int(post.findAll("span")[0].text.replace("\xa0", "")), 0)
+            temp_res["commentsCount"] = tryFunction(lambda: int(post.findAll("span")[1].text.replace("\xa0", "")), 0)
             overall_result.append(temp_res)
         except (AttributeError, KeyError, TypeError):
             print("info: не удалось извлечь ссылку")

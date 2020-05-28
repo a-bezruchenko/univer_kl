@@ -1,4 +1,5 @@
 import aiofiles
+# этот файл содержит вспомогательные функции
 
 # Убирает формат и ставит вместо него png
 def convertNameToPng(image_name):
@@ -43,3 +44,15 @@ async def append_to_file(arr, filename: str):
     async with aiofiles.open(filename, "a") as f:
         for e in arr:
             await f.write(e + '\n')
+
+def intTryParse(value, defaultVal):
+    try:
+        return int(value)
+    except ValueError:
+        return defaultVal
+
+def tryFunction(function, defaultVal, params={}):
+    try:
+        return function(*params)
+    except Exception:
+        return defaultVal
