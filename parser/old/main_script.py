@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup as BS
 from safe_get import fetch_html
 from reactor_parse import scrapPage, getPrevPages, parse_html
 from util import getName, cutLastFrom, append_to_file
+import requests
 
 url = "https://v1.ru/text/"
 r = requests.get(url)  

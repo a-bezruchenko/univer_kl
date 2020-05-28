@@ -1,8 +1,10 @@
 # encode: utf-8
 # этот файл содержит функции парсинга различных видов страниц
-import requests
 from bs4 import BeautifulSoup as BS
-from util import intTryParse, tryFunction
+from util import tryFunction
+
+def parse_html(text):
+    return BS(text, 'html.parser')
 
 # формат: список ссылок
 def quick_scrap_news_page(parsed_content):
@@ -19,8 +21,7 @@ def scrap_news_page(parsed_content):
         try:
             temp_res = {}
             temp_res["link"] = post.findAll("a")[0]['href']
-            #temp_res["viewsCount"] = intTryParse(post.findAll("span")[0].text, 0)
-            #temp_res["commentsCount"] = intTryParse(post.findAll("span")[1].text, 0)
+            # возможно, здесь бы использовать partial, но мне лень
             temp_res["viewsCount"] = tryFunction(lambda: int(post.findAll("span")[0].text.replace("\xa0", "")), 0)
             temp_res["commentsCount"] = tryFunction(lambda: int(post.findAll("span")[1].text.replace("\xa0", "")), 0)
             overall_result.append(temp_res)
@@ -43,26 +44,17 @@ def scrap_news_page(parsed_content):
 def scrapPostPage(parsed_content):
     header = parsed_content.select_one("#record-header")
     result = {}
-    result["title"] = list(list(header.children)[0].find("h2", class_="I3akh I3amf BZb1").children)[0]["title"].lstrip(" ")
-    result["link"] = list(list(header.children)[0].find("h2", class_="I3akh I3amf BZb1").children)[0]["href"]
-    result["datetime"] = list(header.children)[0].find("div", class_="I3akv BZj3")["datetime"]
+    result["title"] = list(header.children)[0].findAll("h2")[0].text.lstrip(" ").rstrip(" ")
+    result["datetime"] = header.find("time")['datetime']
     try:
-        result["section"] = list(header.children)[0].find("a", class_="I3ak1 I3amn BZj7").text.lstrip(" ").rstrip(" ")
+        result["section"] = list(header.children)[0].findAll("a")[0]['href'].lstrip(" ").rstrip(" ")
     except (AttributeError, KeyError, TypeError):
         pass
-    
     try:
-        result["theme"] = list(header.children)[0].find("a", class_="I3ak5 I3amh BZj9").text.lstrip(" ").rstrip(" ")
+        result["theme"] = list(header.children)[0].findAll("a")[1]['href'].lstrip(" ").rstrip(" ")
     except (AttributeError, KeyError, TypeError):
         pass
-    
-    try:
-        result["format"] = list(header.children)[0].find("a", class_="I3ak1 I3amn BZj-").text.lstrip(" ").rstrip(" ")
-    except (AttributeError, KeyError, TypeError):
-        pass
-
-    result["commentsCount"] = int(list(header.children)[1].find("a", class_="LHd- LHe5").text)
-    result["viewsCount"] = int(list(header.children)[1].find("div", class_="LHd-").text.replace('\xa0', ''))
-
-    result["text"] = ' '.join(list(map(lambda x:x.text, parsed_content.find("div", itemprop="articleBody").findAll("p"))))
-
+    # комменты не берутся, они там реализованы через зад
+    result["viewsCount"] = tryFunction(lambda: int(list(header.children)[1].findAll("div")[1].text.replace("\xa0", "")), 0)
+    result["text"] = ' '.join(list(map(lambda x: x.text, parsed_content.find("div", itemprop="articleBody").findAll("p"))))
+    return result
