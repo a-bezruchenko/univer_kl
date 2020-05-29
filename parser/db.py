@@ -101,7 +101,7 @@ async def update_db(data, cur):
     if viewsCount is not None: args_str.append("viewsCount=%s") 
     if commentsCount is not None: args_str.append("commentsCount=%s")
     query = "UPDATE Storage SET " + ', '.join(args_str) + " WHERE link = %s;"
-    args = tuple(filter(None, (title, date, section, theme, text, viewsCount, commentsCount, link)))
+    args = tuple(filter(lambda x: x is not None, (title, date, section, theme, text, viewsCount, commentsCount, link)))
     if len(args)==0:
         return
     await cur.execute(query, args)
