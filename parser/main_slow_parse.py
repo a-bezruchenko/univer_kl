@@ -3,7 +3,7 @@
 # скрипт проходит по тем страницам, которые были записаны в базу данных, но не имеют текста
 
 import asyncio
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponseError
 
 from safe_get import fetch_html
 from parser_funcs import parse_html, scrap_post_page
@@ -11,7 +11,11 @@ import db
 
 async def download_and_parse(urls, session, queue):
     for url in urls:
-        html_text = await fetch_html("https://v1.ru"+url, session)
+        try:
+            html_text = await fetch_html("https://v1.ru"+url, session)
+        except ClientResponseError:
+            print("Ошибка при обращении к " + url)
+            continue
         html = parse_html(html_text)
         result = scrap_post_page(html)
         result['link'] = url
