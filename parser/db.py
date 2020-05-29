@@ -34,21 +34,19 @@ async def init():
 # вставляет новую запись без проверки уникальности
 # принимает словарь
 async def insert_db(data, cur, con):
-    link = con.escape(data['link'])
-    title = tryFunction(lambda: con.escape(data['title']), None)
+    link = data['link']
+    title = tryFunction(lambda: data['title'], None)
     date = tryFunction(lambda: data['date'], None)
-    section = tryFunction(lambda: con.escape(data['section']), None)
-    theme = tryFunction(lambda: con.escape(data['theme']), None)
-    text = tryFunction(lambda: con.escape(data['text']), None)
+    section = tryFunction(lambda: data['section'], None)
+    theme = tryFunction(lambda: data['theme'], None)
+    text = tryFunction(lambda: data['text'], None)
     viewsCount = tryFunction(lambda: int(data['viewsCount']), None)
     commentsCount = tryFunction(lambda: int(data['commentsCount']), None)
-    print("start query")
-    query = """
-INSERT INTO `Storage` (link, title, date, section, theme, text, viewsCount, commentsCount)
-VALUES ("%s", %s, %s, %s, %s, %s, %s, %s);"""
-    await cur.execute(query, (link, title, date, section, theme, text, viewsCount, commentsCount))
-    await con.commit()
-    print("end query")
+    print((link, title, date, section, theme, text, viewsCount, commentsCount))
+    await cur.execute("INSERT INTO `kl`.`Storage` (link, title, date, section, theme, text, viewsCount, commentsCount) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
+ (link, title, date, section, theme, text, viewsCount, commentsCount))
+    await cur.execute("COMMIT;")
 
 # обновляет записи без проверки существования
 # принимает словарь
