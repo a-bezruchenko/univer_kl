@@ -30,15 +30,11 @@ def scrap_news_page(parsed_content):
     return overall_result
 
 # формат: {"title", 
-# 
 # "date",
 # "link",
-# "section",
-# "theme",
-# "format",
+# "section",# опционально
+# "theme",  # опционально
 # "text",
-# "videoLinks",
-# "imgLinks",
 # "viewsCount",
 # "commentsCount"}
 def scrapPostPage(parsed_content):
@@ -56,5 +52,5 @@ def scrapPostPage(parsed_content):
         pass
     # комменты не берутся, они там реализованы через зад
     result["viewsCount"] = tryFunction(lambda: int(list(header.children)[1].findAll("div")[1].text.replace("\xa0", "")), 0)
-    result["text"] = ' '.join(list(map(lambda x: x.text, parsed_content.find("div", itemprop="articleBody").findAll("p"))))
+    result["text"] = ' '.join(list(map(lambda x: x.text, parsed_content.find("div", itemprop="articleBody").findAll("p")))).replace("\xa0", " ")
     return result
