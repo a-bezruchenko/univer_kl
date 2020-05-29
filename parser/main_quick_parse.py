@@ -1,91 +1,45 @@
-# encode: utf-8
-# этот файл — основной исполняемый файл парсера
-import re
-import datetime
-from time import sleep
-import sys
-import requests
-import os.path
-
+# coding: utf8
+# этот файл — один из исполняемых
+# скрипт быстро пробегается по главной странице, собирая доступную информацию,
+# но не заходит на страницы и не собирает текст
 import asyncio
 from aiohttp import ClientSession
 
-from bs4 import BeautifulSoup as BS
-
 from safe_get import fetch_html
-from reactor_parse import scrapPage, getPrevPages, parse_html
-from util import getName, cutLastFrom, append_to_file
-import requests
-
-LAST_PAGE_CHECKED = ""
+from parser_funcs import parse_html, scrap_news_page, get_pages_count
+import db
+from util import getLastFrom
 
 def getPrevPages(pages_count, last_page_checked = 1):
-    return [f"https://v1.ru/text/?page={x}" for x in range(last_page_checked, pages_count+1)] 
+    return [f"https://v1.ru/text/?page={x}" for x in range(last_page_checked, pages_count+1)]
 
+async def download_and_parse(url, session, queue):
+    html_text = await fetch_html(url, session)
+    html = parse_html(html_text)
+    result = scrap_news_page(html)
+    num = getLastFrom(url, "=")
+    await queue.put((result, num))
 
 async def quick_parse_site():
     async with ClientSession() as session:
-        html = await download_parsed_page(LAST_PAGE_CHECKED, session)
-        
-        pages = getPrevPages()
+        parsed_content = parse_html(await fetch_html("https://v1.ru/text/", session))
+        pages_count = get_pages_count(parsed_content)
+        pages_list = getPrevPages(pages_count)
+        db_con = await db.init()
+        queue = asyncio.Queue()
+        producers = [asyncio.create_task(download_and_parse(page, session, queue)) for page in pages_list]
+        consumer = asyncio.create_task(load_parsed_data_to_db(queue, db_con))
+        await asyncio.gather(*producers)
+        await queue.join()
+        consumer.cancel()
+        await asyncio.gather(consumer, return_exceptions=True)
 
-
-    #"https://v1.ru/text/?page=1"
-
-
-# async def bulk_save_source_image_by_tag(url):
-#     # считать прогресс
-#     # в файле записана последняя проверенная страница
-    
-    
-#     progress_file_name = "output/lastpage.txt"
-
-#     if not os.path.exists("output"):
-#         os.mkdir("output")
-
-#     if os.path.isfile(progress_file_name):  # если файла нет, то и прогресс не надо считывать
-#         print("найден файл прогресса")
-#         with open(progress_file_name, "r") as f:
-#             LAST_PAGE_CHECKED = f.read()
-#     else:
-#         print("файл прогресса не найден")
-
-#     if LAST_PAGE_CHECKED == "":
-#         LAST_PAGE_CHECKED = url
-#         print("файл прогресса пуст")
-#     else:
-#         print("продолжаем с ", LAST_PAGE_CHECKED)
-
-#     # продолжить
-#     async with ClientSession() as session:
-#         html = await download_parsed_page(LAST_PAGE_CHECKED, session)
-#         tag_pages_list = getPrevPages(url, html)
-#         queue = asyncio.Queue()
-#         producers = [asyncio.create_task(download_and_parse(page, session, queue)) for page in tag_pages_list]
-#         file_loader = asyncio.create_task(load_parsed_data_to_db(queue))
-#         await asyncio.gather(*producers)
-#         await queue.join()
-#         file_loader.cancel()
-#         await asyncio.gather(file_loader, return_exceptions=True)
-
-# async def load_parsed_data_to_file(queue):
-#     global LAST_PAGE_CHECKED
-#     while True:
-#          = await queue.get()
-#         print(str.format("Начата обработка страницы {0}", page))
-#         LAST_PAGE_CHECKED = page
-#         # следующий кусок кода независимый друг от друга и мы можем выполнить их паралельно
-
-#         print(str.format("Страница {0} обработана", page))
-#         queue.task_done()
-
-# async def download_and_parse(page, session, queue):
-#     html_text = await fetch_html(page, session)
-#     html = parse_html(html_text)
-#     result = scrapPage(html)
-#     await queue.put(result)
+async def load_parsed_data_to_db(queue, db_con):
+    while True:
+        data_list, num = await queue.get()
+        await asyncio.gather(*[db.add_values(el, db_con) for el in data_list])
+        print(f"Страница {num} обработана")
+        queue.task_done()
 
 if __name__ == "__main__":
     asyncio.run(quick_parse_site())
-
-    

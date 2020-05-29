@@ -1,4 +1,4 @@
-# encode: utf-8
+# coding: utf8
 # этот файл содержит функции парсинга различных видов страниц
 from bs4 import BeautifulSoup as BS
 from util import tryFunction
@@ -12,6 +12,7 @@ def quick_scrap_news_page(parsed_content):
                 lambda x: x.find("a")['href'],
                 parsed_content.find("div", class_="central-column-container").findAll("article")))
 
+# формат: число
 def get_pages_count(parsed_content):
     return int(list(parsed_content.findAll("div")[538].children)[-1].text)
 
@@ -23,7 +24,8 @@ def scrap_news_page(parsed_content):
     for post in posts:
         try:
             temp_res = {}
-            temp_res["link"] = post.findAll("a")[0]['href']
+            temp_res["link"] = post.find("a")['href']
+            temp_res["title"] = post.find("h2").text
             # возможно, здесь бы использовать partial, но мне лень
             temp_res["viewsCount"] = tryFunction(lambda: int(post.findAll("span")[0].text.replace("\xa0", "")), 0)
             temp_res["commentsCount"] = tryFunction(lambda: int(post.findAll("span")[1].text.replace("\xa0", "")), 0)
@@ -35,8 +37,7 @@ def scrap_news_page(parsed_content):
 
 
 # формат: {"title", 
-# "date",
-# "link",
+# "datetime",
 # "section",# опционально
 # "theme",  # опционально
 # "text",

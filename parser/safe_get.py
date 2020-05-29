@@ -1,3 +1,4 @@
+# coding: utf8
 from time import time as current_time
 import asyncio
 from aiohttp import ClientSession
@@ -5,7 +6,7 @@ from aiohttp import ClientSession
 # файл для запросов к серверу
 
 LAST_REQUEST_TIME = current_time()
-DEFAULT_WAIT_TIME = 1.0
+DEFAULT_WAIT_TIME = 1.5
 SAFE_GET_LOCK = asyncio.Lock()
 
 
