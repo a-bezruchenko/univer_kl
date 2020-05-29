@@ -12,6 +12,11 @@ async def add_values(data, con):
     else:
         await insert_db(data, cur, con)
 
+async def get_incomplete_records(con):
+    cur = await con.cursor()
+    await cur.execute("SELECT link FROM Storage WHERE text is null LIMIT 100;")
+    return await cur.fetchall()
+
 # инициализирует БД, возвращает объект подключения
 async def init():
     filename = "mysql_login_data.txt"
@@ -53,7 +58,6 @@ async def insert_db(data, cur, con):
     text = tryFunction(lambda: data['text'], None)
     viewsCount = tryFunction(lambda: int(data['viewsCount']), None)
     commentsCount = tryFunction(lambda: int(data['commentsCount']), None)
-    print((link, title, date, section, theme, text, viewsCount, commentsCount))
     await cur.execute("INSERT INTO `kl`.`Storage` (link, title, date, section, theme, text, viewsCount, commentsCount) \
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
  (link, title, date, section, theme, text, viewsCount, commentsCount))
@@ -91,7 +95,5 @@ async def update_db(data, cur, con):
     if commentsCount is not None: args_str.append("commentsCount=%s")
     query = "UPDATE Storage SET " + ', '.join(args_str) + " WHERE link = %s;"
     args = tuple(filter(None, (title, date, section, theme, text, viewsCount, commentsCount, link)))
-    print(query)
-    print(args)
     await cur.execute(query, args)
     await cur.execute("COMMIT;")
