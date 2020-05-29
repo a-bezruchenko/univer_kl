@@ -23,7 +23,7 @@ async def init():
         print("Введите имя базы данных:")
         database = input()
     try:
-        con = await aiomysql.connect(host=host, user=user, password=password, db=database)
+        con = await aiomysql.connect(host=host, user=user, password=password, db=database, autocommit=True)
         cur = await con.cursor()
         await cur.execute("use kl;")
         return con, cur
@@ -48,20 +48,32 @@ async def insert_db(data, cur, con):
  (link, title, date, section, theme, text, viewsCount, commentsCount))
     await cur.execute("COMMIT;")
 
+async def select_from_db(link, cur, con):
+    await cur.execute("SELECT * FROM Storage WHERE link=%s", (link,))
+    return await cur.fetchall()
+
 # обновляет записи без проверки существования
 # принимает словарь
 async def update_db(data, cur, con):
-    query = """
-UPDATE `Order` SET State=%s WHERE id=<>"""
-    link = con.escape(data['link'])
-    title = tryFunction(lambda: con.escape(data['title']), None)
+    link = data['link']
+    title = tryFunction(lambda: data['title'], None)
     date = tryFunction(lambda: data['date'], None)
-    section = tryFunction(lambda: con.escape(data['section']), None)
-    theme = tryFunction(lambda: con.escape(data['theme']), None)
-    text = tryFunction(lambda: con.escape(data['text']), None)
+    section = tryFunction(lambda: data['section'], None)
+    theme = tryFunction(lambda: data['theme'], None)
+    text = tryFunction(lambda: data['text'], None)
     viewsCount = tryFunction(lambda: int(data['viewsCount']), None)
     commentsCount = tryFunction(lambda: int(data['commentsCount']), None)
-
-        
-
-
+    args_str = []
+    if title is not None: args_str.append("title=%s") 
+    if date is not None: args_str.append("date=%s") 
+    if section is not None: args_str.append("section=%s") 
+    if theme is not None: args_str.append("theme=%s") 
+    if text is not None: args_str.append("text=%s") 
+    if viewsCount is not None: args_str.append("viewsCount=%s") 
+    if commentsCount is not None: args_str.append("commentsCount=%s")
+    query = "UPDATE Storage SET " + ', '.join(args_str) + " WHERE link = %s;"
+    args = tuple(filter(None, (title, date, section, theme, text, viewsCount, commentsCount, link)))
+    print(query)
+    print(args)
+    await cur.execute(query, args)
+    await cur.execute("COMMIT;")
