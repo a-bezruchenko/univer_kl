@@ -17,17 +17,19 @@ from reactor_parse import scrapPage, getPrevPages, parse_html
 from util import getName, cutLastFrom, append_to_file
 import requests
 
-
-
-
 LAST_PAGE_CHECKED = ""
 
 def getPrevPages(pages_count, last_page_checked = 1):
     return [f"https://v1.ru/text/?page={x}" for x in range(last_page_checked, pages_count+1)] 
 
-async def parse_site(last_page = 1):
-    global LAST_PAGE_CHECKED
-    LAST_PAGE_CHECKED = url
+
+async def quick_parse_site():
+    async with ClientSession() as session:
+        html = await download_parsed_page(LAST_PAGE_CHECKED, session)
+        
+        pages = getPrevPages()
+
+
     #"https://v1.ru/text/?page=1"
 
 
@@ -84,16 +86,6 @@ async def parse_site(last_page = 1):
 #     await queue.put(result)
 
 if __name__ == "__main__":
-    if len(sys.argv)==1:
-        url_to_parse_from = "https://v1.ru/text/"
-    else:
-        url_to_parse_from = sys.argv[2]
-
-    try:
-        asyncio.run(bulk_save_source_image_by_tag(url_to_parse_from))
-    except KeyboardInterrupt:
-        with open("output/lastpage.txt", "w") as progress_file:
-            print(f"Последняя страница ", LAST_PAGE_CHECKED, " сохранена")
-            progress_file.write(LAST_PAGE_CHECKED)
+    asyncio.run(quick_parse_site())
 
     

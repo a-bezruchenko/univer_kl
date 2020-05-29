@@ -12,6 +12,9 @@ def quick_scrap_news_page(parsed_content):
                 lambda x: x.find("a")['href'],
                 parsed_content.find("div", class_="central-column-container").findAll("article")))
 
+def get_pages_count(parsed_content):
+    return int(list(parsed_content.findAll("div")[538].children)[-1].text)
+
 # формат: [{"link", "viewsCount", "likesCount"}]
 def scrap_news_page(parsed_content):
     news_column = parsed_content.find("div", class_="central-column-container")
@@ -28,6 +31,8 @@ def scrap_news_page(parsed_content):
         except (AttributeError, KeyError, TypeError):
             print("info: не удалось извлечь ссылку")
     return overall_result
+
+
 
 # формат: {"title", 
 # "date",
