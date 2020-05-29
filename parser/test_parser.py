@@ -1,7 +1,9 @@
+# coding: utf8
 from pprint import pprint
 import requests
 from bs4 import BeautifulSoup as BS
 from parser_funcs import *
+
 url = "https://v1.ru/text/"
 r = requests.get(url)  
 parsed_content = parse_html(r.text)
