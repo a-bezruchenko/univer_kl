@@ -3,6 +3,16 @@ import os.path
 from getpass import getpass
 from util import tryFunction
 
+# добавляет или обновляет запись в базе данных
+# незаданные поля не трогаются
+async def add_values(data, con):
+    cur = await con.cursor()
+    if (await is_in_db(data['link'], cur, con)):
+        await update_db(data, cur, con)
+    else:
+        await insert_db(data, cur, con)
+
+# инициализирует БД, возвращает объект подключения
 async def init():
     filename = "mysql_login_data.txt"
     if os.path.isfile(filename):
@@ -26,7 +36,8 @@ async def init():
         con = await aiomysql.connect(host=host, user=user, password=password, db=database, autocommit=True)
         cur = await con.cursor()
         await cur.execute("use kl;")
-        return con, cur
+        cur.close()
+        return con
     except RuntimeError:
         print(f"Ошибка при подключении к базе данных. Проверьте логин и пароль, удостоверьтесь, что база данных доступна.")
         return None
@@ -52,7 +63,14 @@ async def select_from_db(link, cur, con):
     await cur.execute("SELECT * FROM Storage WHERE link=%s", (link,))
     return await cur.fetchall()
 
-# обновляет записи без проверки существования
+async def is_in_db(link, cur, con):
+    await cur.execute("SELECT COUNT(*) FROM Storage WHERE link=%s", (link,))
+    if (await cur.fetchone())[0]==1:
+        return True
+    else:
+        return False
+
+# обновляет запись без проверки существования
 # принимает словарь
 async def update_db(data, cur, con):
     link = data['link']
