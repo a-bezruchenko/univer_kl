@@ -43,7 +43,7 @@ def scrap_news_page(parsed_content):
 # "text",
 # "viewsCount",
 # "commentsCount"}
-def scrapPostPage(parsed_content):
+def scrap_post_page(parsed_content):
     header = parsed_content.select_one("#record-header")
     result = {}
     result["title"] = list(header.children)[0].findAll("h2")[0].text.lstrip(" ").rstrip(" ")

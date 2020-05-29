@@ -17,7 +17,7 @@ async def add_values(data, pool):
 async def get_incomplete_records(pool):
     async with pool.acquire() as conn:
         async with conn.cursor() as cur:
-            await cur.execute("SELECT link FROM Storage WHERE text is null LIMIT 100;")
+            await cur.execute("SELECT link FROM Storage WHERE text is null;")
             return await cur.fetchall()
 
 # инициализирует БД, возвращает объект подключения
