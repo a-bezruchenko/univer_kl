@@ -20,10 +20,14 @@ async def download_and_parse(urls, session, queue):
         result = scrap_post_page(html)
         result['link'] = url
         await queue.put((result, url))
+    await queue.put(True)
 
 async def load_parsed_data_to_db(queue, db_con):
     while True:
-        data, num = await queue.get()
+        q_data = await queue.get()
+        if q_data == True:
+            break
+        data, num = q_data
         await asyncio.gather(db.add_values(data, db_con))
         print(f"Страница {num} обработана")
         queue.task_done()
