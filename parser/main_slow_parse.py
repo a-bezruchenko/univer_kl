@@ -8,6 +8,7 @@ from aiohttp import ClientSession, ClientResponseError
 from safe_get import fetch_html
 from parser_funcs import parse_html, scrap_post_page
 import db
+import db_parser
 
 async def download_and_parse(urls, session, queue):
     for url in urls:
@@ -28,14 +29,14 @@ async def load_parsed_data_to_db(queue, db_con):
         if q_data == True:
             break
         data, num = q_data
-        await asyncio.gather(db.add_values(data, db_con))
+        await asyncio.gather(db_parser.add_values(data, db_con))
         print(f"Страница {num} обработана")
         queue.task_done()
 
 async def slow_parse_site():
     db_con = await db.init()
     async with ClientSession() as session:
-        pages_list = list(map(lambda x: x[0], await db.get_incomplete_records(db_con)))
+        pages_list = list(map(lambda x: x[0], await db_parser.get_incomplete_records(db_con)))
         queue = asyncio.Queue()
         producer = asyncio.create_task(download_and_parse(pages_list, session, queue))
         consumer = asyncio.create_task(load_parsed_data_to_db(queue, db_con))

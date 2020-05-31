@@ -9,6 +9,7 @@ from aiohttp import ClientSession, ClientResponseError
 from safe_get import fetch_html
 from parser_funcs import parse_html, scrap_news_page, get_pages_count
 import db
+import db_parser
 from util import getLastFrom
 
 def get_prev_pages(pages_count, last_page_to_check=-1):
@@ -35,7 +36,7 @@ async def load_parsed_data_to_db(queue, db_con):
         if q_data == True:
             break
         data_list, num = q_data
-        await asyncio.gather(*[db.add_values(el, db_con) for el in data_list])
+        await asyncio.gather(*[db_parser.add_values(el, db_con) for el in data_list])
         print(f"Страница {num} обработана")
         queue.task_done()
 
