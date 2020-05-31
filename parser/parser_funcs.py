@@ -25,7 +25,8 @@ def scrap_news_page(parsed_content):
         try:
             temp_res = {}
             temp_res["link"] = post.find("a")['href']
-            if temp_res["link"].startswith("/text/theme"):
+            temp_res["link"].replace("https://v1.ru", "")
+            if temp_res["link"].startswith("/text/theme") or (temp_res["link"].startswith("http")):
                 continue
             temp_res["title"] = post.find("h2").text
             # возможно, здесь бы использовать partial, но мне лень
