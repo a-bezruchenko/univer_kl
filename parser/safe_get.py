@@ -16,7 +16,6 @@ async def fetch_html(url: str, session: ClientSession, **kwargs) -> str:
     kwargs передаются в session.request().
     """
     resp = await safe_get(url, session, **kwargs)
-    resp.raise_for_status()
     html = await resp.text()
     return html
 
@@ -34,5 +33,5 @@ async def safe_get(url, session, wait_time=DEFAULT_WAIT_TIME, **kwargs):
         #print(sleep_time)
         await asyncio.sleep(sleep_time)
     print(str.format("Запрашиваем {0}, время:{1}", url, current_time()))
-    return await session.request(method="GET", url=url, **kwargs)
+    return await session.request(method="GET", url=url, raise_for_status=True,**kwargs)
 
