@@ -25,6 +25,8 @@ def scrap_news_page(parsed_content):
         try:
             temp_res = {}
             temp_res["link"] = post.find("a")['href']
+            if temp_res["link"].startswith("/text/theme"):
+                continue
             temp_res["title"] = post.find("h2").text
             # возможно, здесь бы использовать partial, но мне лень
             temp_res["viewsCount"] = tryFunction(lambda: int(post.findAll("span")[0].text.replace("\xa0", "")), 0)
@@ -46,8 +48,11 @@ def scrap_news_page(parsed_content):
 def scrap_post_page(parsed_content):
     header = parsed_content.select_one("#record-header")
     result = {}
-    result["title"] = list(header.children)[0].findAll("h2")[0].text.lstrip(" ").rstrip(" ")
-    result["datetime"] = header.find("time")['datetime']
+    try:
+        result["title"] = list(header.children)[0].findAll("h2")[0].text.lstrip(" ").rstrip(" ")
+        result["datetime"] = header.find("time")['datetime']
+    except (AttributeError, KeyError, TypeError):
+        return {} # если мы не смогли извлечь эти два поля, то, скорее всего, ссылка неправильна и дальше парсить бесполезно
     try:
         result["section"] = list(header.children)[0].findAll("a")[0]['href'].lstrip(" ").rstrip(" ")
     except (AttributeError, KeyError, TypeError):
