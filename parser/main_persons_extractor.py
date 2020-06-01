@@ -1,3 +1,6 @@
+# coding: utf8
+# этот файл — один из исполняемых
+# скрипт парсит имена всех персон области и помещает их в таблицу persons
 import asyncio
 from aiohttp import ClientSession, ClientResponseError
 
