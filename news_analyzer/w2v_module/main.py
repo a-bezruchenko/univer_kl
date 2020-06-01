@@ -14,11 +14,10 @@ from db_init import *
 
 def main():
     if(not os.path.exists('model')):
-        db_con = pymysql.connect('localhost', 'root',
-                      'password', 'kl')
+        db_con = init_sync()
         if (not os.path.exists('data_text')):
             print("Папка создана")
-            os.mkdir('data')
+            os.mkdir('data_text')
         save_txt.save_text_db_to_txt(db_con)
 
         word2vec.create_w2v_model()
