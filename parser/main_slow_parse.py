@@ -7,7 +7,7 @@ from aiohttp import ClientSession, ClientResponseError
 
 from safe_get import fetch_html
 from parser_funcs import parse_html, scrap_post_page
-import db
+import db_init
 import db_parser
 
 async def download_and_parse(urls, session, queue):
@@ -34,7 +34,7 @@ async def load_parsed_data_to_db(queue, db_con):
         queue.task_done()
 
 async def slow_parse_site():
-    db_con = await db.init()
+    db_con = await db_init.init()
     async with ClientSession() as session:
         pages_list = list(map(lambda x: x[0], await db_parser.get_incomplete_records(db_con)))
         queue = asyncio.Queue()

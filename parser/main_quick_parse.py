@@ -8,7 +8,7 @@ from aiohttp import ClientSession, ClientResponseError
 
 from safe_get import fetch_html
 from parser_funcs import parse_html, scrap_news_page, get_pages_count
-import db
+import db_init
 import db_parser
 from util import getLastFrom
 
@@ -41,7 +41,7 @@ async def load_parsed_data_to_db(queue, db_con):
         queue.task_done()
 
 async def quick_parse_site(last_page_to_check=-1):
-    db_con = await db.init()
+    db_con = await db_init.init()
     async with ClientSession() as session:
         parsed_content = parse_html(await fetch_html("https://v1.ru/text/", session))
         pages_count = get_pages_count(parsed_content)

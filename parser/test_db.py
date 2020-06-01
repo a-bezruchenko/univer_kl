@@ -1,6 +1,6 @@
 import asyncio
 import aiomysql
-from db import *
+from db_init import *
 from db_parser import *
 
 data = {'link': '/text/health/69286435/', 'viewsCount': 298, 'commentsCount': 2}

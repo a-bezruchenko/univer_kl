@@ -7,7 +7,7 @@ from aiohttp import ClientSession, ClientResponseError
 from safe_get import fetch_html
 from util import getLastFrom
 
-import db
+import db_init
 from parser_funcs import parse_html
 
 def get_urls():
@@ -60,7 +60,7 @@ async def load_parsed_data_to_db(queue, con):
         queue.task_done()
 
 async def get_persons():
-    db_con = await db.init()
+    db_con = await db_init.init()
     async with ClientSession() as session:
         queue = asyncio.Queue()
         pages_list = get_urls()
