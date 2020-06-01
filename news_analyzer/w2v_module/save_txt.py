@@ -9,7 +9,7 @@ def save_text_db_to_txt(con):
 
         # Сохраняем в файлы для обучения модели
         for el in cur.fetchall():
-            output_file = open(f'./data/{filename}_{i}.txt', 'w')
+            output_file = open(f'./data_text/{filename}_{i}.txt', 'w')
             i += 1
             output_file.write(el[0])
             output_file.close()

@@ -1,4 +1,4 @@
-PATH = 'data/*.txt'
+PATH = 'data_text/*.txt'
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Tokenizer

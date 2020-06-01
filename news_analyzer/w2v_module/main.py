@@ -16,7 +16,7 @@ def main():
     if(not os.path.exists('model')):
         db_con = pymysql.connect('localhost', 'root',
                       'password', 'kl')
-        if (not os.path.exists('data')):
+        if (not os.path.exists('data_text')):
             print("Папка создана")
             os.mkdir('data')
         save_txt.save_text_db_to_txt(db_con)
