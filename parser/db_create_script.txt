@@ -20,3 +20,10 @@ CREATE TABLE IF NOT EXISTS `kl`.`splitted` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`persons` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `fullname` MEDIUMTEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;

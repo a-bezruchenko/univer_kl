@@ -65,3 +65,15 @@ def init_sync():
     except RuntimeError:
         print(f"Ошибка при подключении к базе данных. Проверьте логин и пароль, удостоверьтесь, что база данных доступна.")
         return None
+
+def write_query_results(query, filename):
+    con = init_sync()
+    cur = con.cursor()
+    cur.execute(query)
+    result = cur.fetchall()
+    with open(filename, "w", encoding="utf-8") as f:
+        for row in result:
+            for el in row:
+                f.write(el)
+                f.write(" ")
+            f.write("\n")
