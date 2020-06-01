@@ -1,0 +1,22 @@
+create database kl;
+use kl;
+CREATE TABLE IF NOT EXISTS `kl`.`Storage` (
+    `link` CHAR(128) NOT NULL,
+    `title` TEXT,
+    `date` DATETIME,
+    `section` TINYTEXT,
+    `theme` TINYTEXT,
+    `text` MEDIUMTEXT,
+    `viewsCount` INT,
+    `commentsCount` INT,
+  PRIMARY KEY (`link`),
+  UNIQUE INDEX `link_UNIQUE` (`link` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`splitted` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `link` CHAR(128) NOT NULL,
+    `text` MEDIUMTEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
