@@ -35,7 +35,10 @@ def main():
     for person in persons:
         pprint("-"*30)
         pprint(person[0])
-        pprint(model.findSynonyms(person[0].split(' ', 1)[0].lower(), 2).collect())
+        try:
+            pprint(model.findSynonyms(person[0].split(' ', 1)[0].lower(), 3).collect())
+        except Exception:
+            pprint("Синонимы не найдены")
 
     spark.stop()
 
