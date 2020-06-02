@@ -1,4 +1,4 @@
-PATH = 'model/kurs_model/'
+PATH = 'model/kurs_model_new/'
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Word2VecModel
