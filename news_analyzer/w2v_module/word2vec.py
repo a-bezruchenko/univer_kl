@@ -27,6 +27,10 @@ def create_w2v_model():
     spark = SparkSession \
         .builder \
         .appName("SimpleApplication") \
+        .config("spark.executor.memory", "2g") \
+        .config("spark.driver.memory", "2g") \
+        .config("spark.memory.offHeap.enabled", True) \
+        .config("spark.memory.offHeap.size", "2g") \
         .getOrCreate()
 
     input_file = spark.sparkContext.wholeTextFiles(PATH)
@@ -67,16 +71,14 @@ def create_w2v_model():
     """)
     stop_words = StopWordsRemover.loadDefaultStopWords('russian')
     remover = StopWordsRemover(inputCol="words", outputCol="filtered", stopWords=stop_words)
-    filtered = remover.transform(words)
 
     print("""
     
     Построение модели...
     
     """)
-    word2Vec = Word2Vec(inputCol='words', outputCol='result')
+    word2Vec = Word2Vec(vectorSize=50, inputCol='words', outputCol='result', minCount=2)
     model = word2Vec.fit(words)
-    w2v_df = model.transform(words)
 
     print("""
     
