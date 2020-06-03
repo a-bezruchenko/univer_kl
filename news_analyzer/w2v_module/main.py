@@ -36,7 +36,11 @@ def main():
         pprint("-"*30)
         pprint(person[0])
         try:
-            pprint(model.findSynonyms(person[0].split(' ', 1)[0].lower(), 3).collect())
+            # pprint(model.findSynonyms(person[0].split(' ', 1)[0].lower(), 3).collect())
+            documentDF = spark.createDataFrame([
+                (person[0].lower().split(" "),)], ["words"])
+            result = model.transform(documentDF)
+            pprint(model.findSynonyms(result.collect()[0][1], 5).collect())
         except Exception:
             pprint("Синонимы не найдены")
 
