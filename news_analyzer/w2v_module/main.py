@@ -56,6 +56,9 @@ def main():
         pprint(persons[i])
         pprint(persons_synonyms[i])
 
+    pprint("Поиск контекстных синонимов достопримечательностей:")
+    get_synonyms(places, 5, model, spark)
+
     spark.stop()
 
 if __name__ == '__main__':
