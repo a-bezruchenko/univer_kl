@@ -11,6 +11,23 @@ import sys
 sys.path.append("../../parser/")
 from db_init import *
 
+
+def get_synonyms(elements, count, model, spark_session):
+    result = []
+    for element in elements:
+        try:
+            elementDF = spark_session.createDataFrame([
+                (element[0].lower().split(" "),)], ["words"])
+            transform_elem = model.transform(elementDF)
+            synonyms = model.findSynonyms(transform_elem.collect()[0][1], count).collect()
+            result.append(synonyms)
+        except Exception:
+            result.append("Синонимы не найдены")
+
+    return result
+
+
+
 def main():
     db_con = init_sync()
     if(not os.path.exists('model')):
@@ -32,17 +49,12 @@ def main():
     model = Word2VecModel.load(PATH)
 
     pprint("Поиск контекстных синонимов персон:")
-    for person in persons:
-        pprint("-"*30)
-        pprint(person[0])
-        try:
-            # pprint(model.findSynonyms(person[0].split(' ', 1)[0].lower(), 3).collect())
-            documentDF = spark.createDataFrame([
-                (person[0].lower().split(" "),)], ["words"])
-            result = model.transform(documentDF)
-            pprint(model.findSynonyms(result.collect()[0][1], 5).collect())
-        except Exception:
-            pprint("Синонимы не найдены")
+    persons_synonyms = get_synonyms(persons, 5, model, spark)
+    pprint(len(persons_synonyms))
+    for i in range(len(persons_synonyms)):
+        pprint("-" * 30)
+        pprint(persons[i])
+        pprint(persons_synonyms[i])
 
     spark.stop()
 
