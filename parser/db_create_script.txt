@@ -34,3 +34,19 @@ CREATE TABLE IF NOT EXISTS `kl`.`places` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`persons_synonyms` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `fullname` MEDIUMTEXT,
+    `synonym` MEDIUMTEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`places_synonyms` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` MEDIUMTEXT,
+    `synonym` MEDIUMTEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
