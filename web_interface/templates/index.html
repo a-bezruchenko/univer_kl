@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Python Flask Bucket List App</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+
+<header class="header">
+    <h1>Контрольная работа по предмету "Компьютерная лингвистика". </h1>
+</header>
+
+<main>
+    <h2>Статьи с сайта <a href="https://v1.ru/"> v1.ru </a> : </h2>
+    <div class="articles">
+
+        {% for article in articles %}
+        <div class="article">
+            <a href={{ article[0] }}> {{ article[1] }}</a>
+            <p>{{ article[5] }} </p>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>
