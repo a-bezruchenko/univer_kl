@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Python Flask Bucket List App</title>
+    <title>Компьютерная лингвистика</title>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
@@ -12,6 +12,19 @@
 </header>
 
 <main>
+     <div class="info">
+        <div class="facts">
+            <button class="getFacts">Предложения с фактами</button>
+        </div>
+
+        <div class="tonality">
+            <button class="getTonality">Тональность предложения</button>
+        </div>
+
+        <div class="synonyms">
+            <button class="getSynonyms">Поиск контекстных синонимов</button>
+        </div>
+    </div>
     <h2>Статьи с сайта <a href="https://v1.ru/"> v1.ru </a> : </h2>
     <div class="articles">
 
