@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Контекстные синонимы</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <h1>Поиск контекстных синонимов. </h1>
+</header>
+
+<main>
+    <form action="" method="post">
+        <p>
+            <label>Введите слово для поиска контекстного синонима: </label>
+            <input type="text" name="word">
+        </p>
+        <p>
+            <input type="submit" value="Поиск">
+        </p>
+    </form>
+
+    {% if word %}
+    <div class="synonyms">
+        <p>Введенная достопримечательность или персона: {{word}}</p>
+        <h3>Контекстные синонимы: </h3>
+        {% for synonym in synonyms %}
+        <li>{{synonym[0]}}</li>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h3>Синонимы не найдены</h3>
+    {% endif %}
+</main>
+</body>
+</html>
