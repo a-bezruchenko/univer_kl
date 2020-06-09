@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 sys.path.append("../parser/")
 from db_init import *
@@ -27,10 +27,18 @@ def get_facts():
     return "Здесь будет результат томиты"
 
 
-@app.route('/getSynonyms')
+@app.route('/getSynonyms', methods=['post', 'get'])
 def get_synonyms():
-    return "Здесь будут синонимы"
+    word = ''
+    if request.method == 'POST':
+        word = request.form.get('word')
 
+    with db_con:
+        cur = db_con.cursor()
+        cur.execute("select synonym from places_synonyms where name like %s "
+                    "union select synonym from persons_synonyms where fullname like %s",
+                    (("%" + word + "%"), ("%" + word + "%")))
+    return render_template('synonyms.html', synonyms=cur.fetchall(), word=word)
 
 if __name__ == "__main__":
     app.run()
