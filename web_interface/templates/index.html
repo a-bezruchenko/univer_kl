@@ -3,7 +3,6 @@
 <head>
     <title>Компьютерная лингвистика</title>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 <body>
 
@@ -14,15 +13,15 @@
 <main>
      <div class="info">
         <div class="facts">
-            <button class="getFacts">Предложения с фактами</button>
+            <button class="getFacts" onclick="location.href = '/getFacts'">Предложения с фактами</button>
         </div>
 
         <div class="tonality">
-            <button class="getTonality">Тональность предложения</button>
+            <button class="getTonality" onclick="location.href = '/getTonality'">Тональность предложения</button>
         </div>
 
         <div class="synonyms">
-            <button class="getSynonyms">Поиск контекстных синонимов</button>
+            <button class="getSynonyms" onclick="location.href = '/getSynonyms'">Поиск контекстных синонимов</button>
         </div>
     </div>
     <h2>Статьи с сайта <a href="https://v1.ru/"> v1.ru </a> : </h2>
