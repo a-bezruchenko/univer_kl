@@ -9,3 +9,8 @@ TAuxDicArticle "персоны"
 {
     key = { "tomita:persons.cxx" type=CUSTOM }
 }
+
+TAuxDicArticle "достопримечательности"
+{
+    key = { "tomita:places.cxx" type=CUSTOM }
+}

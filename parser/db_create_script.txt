@@ -50,3 +50,11 @@ CREATE TABLE IF NOT EXISTS `kl`.`places_synonyms` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`filtered` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `link` CHAR(128) NOT NULL,
+    `text` MEDIUMTEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;

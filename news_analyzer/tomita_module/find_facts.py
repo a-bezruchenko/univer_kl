@@ -3,6 +3,7 @@ import os
 import re
 import sys
 from pprint import pprint
+from db_init import init_sync
 
 def find_facts(text):
     raw_result = analyse_text_with_tomita(text)
@@ -75,6 +76,15 @@ TTextMinerConfig {
 
     return output
     
+# if __name__ == '__main__':
+#     with open(sys.argv[1], 'r', encoding="utf-8") as f:
+#         pprint(find_facts(f.read()))
 if __name__ == '__main__':
-    with open(sys.argv[1], 'r', encoding="utf-8") as f:
-        pprint(find_facts(f.read()))
+    con = init_sync()
+    with con.cursor() as cur:
+        cur.execute("SELECT id, link, text FROM splitted LIMIT 100;")
+        for row in cur.fetchall():
+            id, link, text = row
+            res = find_facts(text)
+            if res != []:
+                cur.execute("INSERT INTO filtered (id, link, text) values;", (id,link,text))

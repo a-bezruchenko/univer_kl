@@ -21,7 +21,7 @@ def prepare_rules(full_name):
 def prepare_rules_3(full_name):
     family_name, name, father_name = full_name.split(" ")
     family_name, name, father_name = family_name.lower(), name.lower(), father_name.lower()
-    t_name = iuliia.translate(full_name, iuliia.Schemas.get("wikipedia")).replace(" ","")
+    t_name = iuliia.translate(full_name, iuliia.Schemas.get("wikipedia")).replace(" " , "")
     return (f"""PersonFullName -> {t_name}_familyname {t_name}_name {t_name}_fathername |
 {t_name}_familyname {t_name}_name | 
 {t_name}_name {t_name}_familyname |
@@ -35,7 +35,7 @@ def prepare_rules_3(full_name):
 def prepare_rules_2(full_name):
     family_name, name = full_name.split(" ")
     family_name, name = family_name.lower(), name.lower()
-    t_name = iuliia.translate(full_name, iuliia.Schemas.get("wikipedia")).replace(" ","")
+    t_name = iuliia.translate(full_name, iuliia.Schemas.get("wikipedia")).replace(" " , "")
     return (f"""PersonFullName -> {t_name}_familyname {t_name}_name | 
 {t_name}_name {t_name}_familyname |
 {t_name}_familyname;
