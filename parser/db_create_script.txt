@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `kl`.`Storage` (
     `viewsCount` INT,
     `commentsCount` INT,
   PRIMARY KEY (`link`),
-  UNIQUE INDEX `link_UNIQUE` (`link` ASC) VISIBLE)
+  UNIQUE INDEX `link_UNIQUE` (`link` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`splitted` (
@@ -18,21 +18,21 @@ CREATE TABLE IF NOT EXISTS `kl`.`splitted` (
     `link` CHAR(128) NOT NULL,
     `text` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`persons` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `fullname` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`places` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`persons_synonyms` (
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `kl`.`persons_synonyms` (
     `fullname` MEDIUMTEXT,
     `synonym` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`places_synonyms` (
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `kl`.`places_synonyms` (
     `name` MEDIUMTEXT,
     `synonym` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `kl`.`filtered` (
@@ -56,5 +56,5 @@ CREATE TABLE IF NOT EXISTS `kl`.`filtered` (
     `link` CHAR(128) NOT NULL,
     `text` MEDIUMTEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
