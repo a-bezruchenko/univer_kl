@@ -8,21 +8,12 @@ from db_init import init_sync
 def find_facts(text):
     raw_result = analyse_text_with_tomita(text)
     res = []
-    regexp = r"(.*)\n\tPerson\n\t\{((?:\n\t\t(?:Name|FamilyName|FatherName) = .*?)+\n\t\})"
+    regexp = r"(.*)\n\s+Person\n\s+\{((?:\n\s+\s+(?:Name|FamilyName|FatherName) = .*?)+\n\s+\})"
     for find_res in re.findall(regexp, raw_result):
-        line = find_res[0]
-        person = {}
-        person_data = find_res[1]
-        for el in list(map(lambda x:x.replace('\t',''), person_data.split('\n')[1:-1])):
-            if el.startswith("Name"):
-                person["name"] = el.replace("Name = ", "")
-            elif el.startswith("FamilyName"):
-                person["familyname"] = el.replace("FamilyName = ", "")
-            elif el.startswith("FatherName"):
-                person["fathername"] = el.replace("FatherName = ", "")
-            else:
-                print(f"Ошибка при анализе {el}")
-        res.append({"text":line, "person":person})
+        res.append(find_res[0])
+    regexp = r"(.*)\n\s+Place\n\s+\{((?:\n\s+\s+(?:Name) = .*?)+\n\s+\})"
+    for find_res in re.findall(regexp, raw_result):
+        res.append(find_res[0])
     return res
 
 def analyse_text_with_tomita(text, base_path = "./", path_to_tomita = "./tomita-parser", rewrite_config=True):
@@ -69,19 +60,16 @@ TTextMinerConfig {
         os.remove(config_file_name)
     return output
     
-# if __name__ == '__main__':
-#     with open(sys.argv[1], 'r', encoding="utf-8") as f:
-#         pprint(find_facts(f.read()))
 if __name__ == '__main__':
     con = init_sync()
     print("Начинаю обрабатывать...")
     with con.cursor() as cur:
-        cur.execute('SELECT id, link, text FROM splitted;')
+        cur.execute('SELECT link, text FROM storage;')
         for row in cur.fetchall():
-            id, link, text = row
+            link, text = row
             res = find_facts(text)
             if res != []:
-                print("Найдены факты")
-                print(text)
-                cur.execute('INSERT INTO filtered (id, link, text) values (%s, %s, %s);', (id, link, text))
+                for el in res:
+                    cur.execute('INSERT INTO filtered (link, text) values (%s, %s);', (link, el))
+            print(f"{link} обработана")
     print("Данные обработаны")
