@@ -61,10 +61,14 @@ TTextMinerConfig {
     return output
     
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        limit = 60000 # больше этого количества у меня начинает падать
+    else:
+        limit = int(sys.argv[1])
     con = init_sync()
     print("Начинаю обрабатывать...")
     with con.cursor() as cur:
-        cur.execute('SELECT link, text FROM storage;')
+        cur.execute(f'SELECT link, text FROM storage LIMIT {limit};')
         for row in cur.fetchall():
             link, text = row
             res = find_facts(text)
