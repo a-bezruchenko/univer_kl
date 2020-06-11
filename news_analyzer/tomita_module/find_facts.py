@@ -35,8 +35,6 @@ encoding "utf8";
 
 TTextMinerConfig {
   Dictionary = "mydic.gzt";
-  
-  PrettyOutput = "pretty.html"; 
 
   Input = {
     File = "input_py"; 
@@ -60,20 +58,15 @@ TTextMinerConfig {
 """
         with open(config_file_name, "w", encoding="utf-8") as c_f:
             c_f.write(config_content)
-    
     with open(input_file_name, "w", encoding="utf-8") as i_f:
         i_f.write(text)
-
     subprocess.call([path_to_tomita, config_file_name])
-
     with open(output_file_name, "r", encoding="utf-8") as o_f:
         output = o_f.read()
-
     os.remove(input_file_name)
     os.remove(output_file_name)
     if rewrite_config:
         os.remove(config_file_name)
-
     return output
     
 # if __name__ == '__main__':
@@ -81,10 +74,14 @@ TTextMinerConfig {
 #         pprint(find_facts(f.read()))
 if __name__ == '__main__':
     con = init_sync()
+    print("Начинаю обрабатывать...")
     with con.cursor() as cur:
-        cur.execute("SELECT id, link, text FROM splitted LIMIT 100;")
+        cur.execute('SELECT id, link, text FROM splitted;')
         for row in cur.fetchall():
             id, link, text = row
             res = find_facts(text)
             if res != []:
-                cur.execute("INSERT INTO filtered (id, link, text) values;", (id,link,text))
+                print("Найдены факты")
+                print(text)
+                cur.execute('INSERT INTO filtered (id, link, text) values (%s, %s, %s);', (id, link, text))
+    print("Данные обработаны")

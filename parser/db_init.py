@@ -59,6 +59,9 @@ def init_sync():
     try:
         conn = pymysql.connect(host=host, user=user, password=password, db=database, autocommit=True)
         cur = conn.cursor()
+        cur.execute("SET NAMES 'utf8';")
+        cur.execute("SET CHARACTER SET 'utf8'")
+        cur.execute("SET SESSION collation_connection = 'utf8_general_ci'")
         cur.execute("use kl;")
         cur.close()
         return conn
