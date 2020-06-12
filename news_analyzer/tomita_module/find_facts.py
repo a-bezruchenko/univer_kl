@@ -61,19 +61,19 @@ TTextMinerConfig {
     return output
     
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        limit = 60000 # больше этого количества у меня начинает падать
-    else:
-        limit = int(sys.argv[1])
     con = init_sync()
     print("Начинаю обрабатывать...")
     with con.cursor() as cur:
-        cur.execute(f'SELECT link, text FROM storage LIMIT {limit};')
-        for row in cur.fetchall():
-            link, text = row
-            res = find_facts(text)
-            if res != []:
-                for el in res:
-                    cur.execute('INSERT INTO filtered (link, text) values (%s, %s);', (link, el))
-            print(f"{link} обработана")
+        cur.execute(f'SELECT count(*) FROM storage;')
+        db_size = cur.fetchall()[0][0]
+        batch_size = 100
+        for limit in [(x,batch_size) for x in range(0, db_size-db_size%batch_size)]:
+            cur.execute(f'SELECT link, text FROM storage LIMIT {limit[0]}, {limit[1]};')
+            for row in cur.fetchall():
+                link, text = row
+                res = find_facts(text)
+                if res != []:
+                    for el in res:
+                        cur.execute('INSERT INTO filtered (link, text) values (%s, %s);', (link, el))
+                print(f"{link} обработана")
     print("Данные обработаны")
