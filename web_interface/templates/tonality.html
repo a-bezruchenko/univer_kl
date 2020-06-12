@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Компьютерная лингвистика</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <h1>Предложения с упоминанием персон и их тональность </h1>
+</header>
+
+<main>
+    <div class="content">
+        {% for element in elements %}
+        <div class="article">
+            <p>{{ element[0] }} </p>
+            <p>Наиболее вероятная тональность текста: {{ element[1] }}. Вероятность: {{ element[2] }}</p>
+            <p>Возможная тональность текста: {{ element[3] }}. Вероятность: {{ element[4] }}</p>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>

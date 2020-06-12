@@ -19,12 +19,11 @@ def index():
 
 @app.route('/getTonality')
 def get_tonality():
-    return "Здесь будет тональность"
-
-
-@app.route('/getFacts')
-def get_facts():
-    return "Здесь будет результат томиты"
+    with db_con:
+        cur = db_con.cursor()
+        cur.execute("SELECT f.text, t.first_tonality, t.first_value, t.second_tonality, t.second_value "
+                    "FROM `tonality` t INNER JOIN `filtered` f ON f.id = t.id_filtered")
+        return render_template('tonality.html', elements=cur.fetchall())
 
 
 @app.route('/getSynonyms', methods=['post', 'get'])
