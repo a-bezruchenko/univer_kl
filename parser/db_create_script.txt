@@ -58,3 +58,14 @@ CREATE TABLE IF NOT EXISTS `kl`.`filtered` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kl`.`tonality` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `id_filtered` INT NOT NULL,
+    `first_tonality` TEXT,
+    `first_value` DOUBLE,
+    `second_tonality` TEXT,
+    `second_value` DOUBLE,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
+ENGINE = InnoDB;
