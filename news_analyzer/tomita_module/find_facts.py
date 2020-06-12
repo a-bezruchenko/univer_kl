@@ -74,6 +74,8 @@ if __name__ == '__main__':
                 res = find_facts(text)
                 if res != []:
                     for el in res:
-                        cur.execute('INSERT INTO filtered (link, text) values (%s, %s);', (link, el))
+                        el = str(el)
+                        if len(el) > 0:
+                            cur.execute('INSERT INTO filtered (link, text) values (%s, %s);', (link, el))
                 print(f"{link} обработана")
     print("Данные обработаны")
