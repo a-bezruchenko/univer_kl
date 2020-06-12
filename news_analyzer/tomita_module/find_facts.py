@@ -66,9 +66,9 @@ if __name__ == '__main__':
     with con.cursor() as cur:
         cur.execute(f'SELECT count(*) FROM storage;')
         db_size = cur.fetchall()[0][0]
-        batch_size = 100
-        for limit in [(x,batch_size) for x in range(0, db_size-db_size%batch_size)]:
-            cur.execute(f'SELECT link, text FROM storage LIMIT {limit[0]}, {limit[1]};')
+        batch_size = 1
+        for offset in [x for x in range(0, db_size-db_size%batch_size, batch_size)]:
+            cur.execute(f'SELECT link, text FROM storage LIMIT {batch_size} OFFSET {offset};')
             for row in cur.fetchall():
                 link, text = row
                 res = find_facts(text)
