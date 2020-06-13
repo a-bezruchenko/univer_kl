@@ -13,7 +13,7 @@ def index():
     with db_con:
         cur = db_con.cursor()
         # Берем статьи из БД
-        cur.execute("SELECT * FROM storage WHERE text IS NOT NULL LIMIT 100")
+        cur.execute("SELECT * FROM storage WHERE text IS NOT NULL ORDER BY date DESC LIMIT 100")
         return render_template('index.html', articles=cur.fetchall())
 
 

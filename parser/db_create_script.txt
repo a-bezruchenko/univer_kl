@@ -1,6 +1,6 @@
 create database kl;
 use kl;
-CREATE TABLE IF NOT EXISTS `kl`.`Storage` (
+CREATE TABLE IF NOT EXISTS `kl`.`storage` (
     `link` CHAR(128) NOT NULL,
     `title` TEXT,
     `date` DATETIME,

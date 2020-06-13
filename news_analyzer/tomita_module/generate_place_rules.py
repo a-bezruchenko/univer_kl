@@ -3,8 +3,6 @@ import sys
 sys.path.append("../../parser/")
 from db_init import init_sync
 
-# TODO: убрать память
-
 def prepare_rules(raw_name):
     splitted_name = raw_name.split(" ")
     processed_splitted_name = list(map(lambda x: '"' + x.replace('"', '').lower() + '"', splitted_name))

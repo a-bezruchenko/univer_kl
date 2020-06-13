@@ -4,6 +4,8 @@ import os
 import re
 import sys
 from pprint import pprint
+
+sys.path.append(os.path.abspath("../../parser/"))
 from db_init import init_sync
 
 def find_facts(text, base_path = "./", path_to_tomita = "./tomita-parser"):
