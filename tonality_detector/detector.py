@@ -26,7 +26,7 @@ def insert_tonality(con, id_filtered, tonality):
 def print_tonality(text, tonality):
     print(text + "\nТональность текста:")
     for ton in tonality:
-        print(tonality_to_russian[ton[0]] + " " + ton[1])
+        print(tonality_to_russian[ton[0]] + " " + str(ton[1]))
 
 
 def main():
