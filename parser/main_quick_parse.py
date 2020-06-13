@@ -15,7 +15,7 @@ from util import getLastFrom
 def get_prev_pages(pages_count, last_page_to_check=-1):
     if last_page_to_check == -1:
         last_page_to_check = pages_count
-    return [f"https://v1.ru/text/?page={x}" for x in range(1, last_page_to_check+1)]
+    return 
 
 async def download_and_parse(urls, session, queue):
     for url in urls:
@@ -40,21 +40,33 @@ async def load_parsed_data_to_db(queue, db_con):
         print(f"Страница {num} обработана")
         queue.task_done()
 
-async def quick_parse_site(last_page_to_check=-1):
+async def quick_parse_site(first_page_to_check, last_page_to_check):
     db_con = await db_init.init()
     async with ClientSession() as session:
-        parsed_content = parse_html(await fetch_html("https://v1.ru/text/", session))
-        pages_count = get_pages_count(parsed_content)
-        pages_list = get_prev_pages(pages_count, last_page_to_check)
+        pages_list = [f"https://v1.ru/text/?page={x}" for x in range(first_page_to_check, last_page_to_check+1)]
         queue = asyncio.Queue()
         producer = asyncio.create_task(download_and_parse(pages_list, session, queue)) 
         consumer = asyncio.create_task(load_parsed_data_to_db(queue, db_con))
         await asyncio.gather(producer, consumer)
 
 if __name__ == "__main__":
+    ERROR = False
     if (len(sys.argv)==1):
-        last_page_to_check = -1
-    else:
+        print("Не удалось запустить парсер: необходимо указать количество страниц")
+        ERROR = True
+    elif (len(sys.argv)==2):
+        first_page_to_check = 1
         last_page_to_check = int(sys.argv[1])
-        print(f"Проверяем только первые {last_page_to_check} страниц")
-    asyncio.run(quick_parse_site(last_page_to_check))
+    else:
+        first_page_to_check = int(sys.argv[1])
+        last_page_to_check = int(sys.argv[2])
+    
+    if first_page_to_check < 1:
+        print("Неправильно указана первая страница")
+        ERROR = True
+
+    if not ERROR:
+        if first_page_to_check > last_page_to_check:
+            first_page_to_check, last_page_to_check = last_page_to_check, first_page_to_check
+        print(f"Проверяем страницы с {first_page_to_check} по {last_page_to_check}")
+        asyncio.run(quick_parse_site(first_page_to_check, last_page_to_check))

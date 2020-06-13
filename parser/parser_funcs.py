@@ -16,7 +16,7 @@ def quick_scrap_news_page(parsed_content):
 def get_pages_count(parsed_content):
     return int(list(parsed_content.findAll("div")[538].children)[-1].text)
 
-# формат: [{"link", "viewsCount", "likesCount"}]
+# формат: [{"link", "viewsCount", "likesCount", "date"}]
 def scrap_news_page(parsed_content):
     news_column = parsed_content.find("div", class_="central-column-container")
     posts = news_column.findAll("article")
@@ -32,6 +32,7 @@ def scrap_news_page(parsed_content):
             # возможно, здесь бы использовать partial, но мне лень
             temp_res["viewsCount"] = tryFunction(lambda: int(post.findAll("span")[0].text.replace("\xa0", "")), 0)
             temp_res["commentsCount"] = tryFunction(lambda: int(post.findAll("span")[1].text.replace("\xa0", "")), 0)
+            temp_res["date"] = tryFunction(lambda: post.findAll("time")[0]['datetime'].replace("\xa0", ""), None)
             overall_result.append(temp_res)
         except (AttributeError, KeyError, TypeError):
             print("info: не удалось извлечь ссылку")
