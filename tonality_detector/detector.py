@@ -6,18 +6,27 @@ sys.path.append("../parser/")
 from db_init import *
 
 
+tonality_to_russian = {
+    'neutral': 'Нейтральный',
+    'negative': 'Негативный',
+    'positive': 'Позитивный',
+    'speech': 'Речь',
+    'skip': 'Не выявлено'
+}
+
+
 def insert_tonality(con, id_filtered, tonality):
     with con.cursor() as cur:
         cur.execute("INSERT INTO tonality (id_filtered, first_tonality, "
                     "first_value, second_tonality, second_value) VALUES (%s, %s, %s, %s, %s);",
-                    (id_filtered, tonality[0][0], float(tonality[0][1]),
-                     tonality[1][0], float(tonality[1][1])))
+                    (id_filtered, tonality_to_russian[tonality[0][0]], float(tonality[0][1]),
+                     tonality_to_russian[tonality[1][0]], float(tonality[1][1])))
 
 
 def print_tonality(text, tonality):
     print(text + "\nТональность текста:")
     for ton in tonality:
-        print(ton)
+        print(tonality_to_russian[ton[0]] + " " + ton[1])
 
 
 def main():
