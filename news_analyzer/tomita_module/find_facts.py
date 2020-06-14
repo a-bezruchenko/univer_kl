@@ -19,10 +19,10 @@ def find_facts(text, base_path = "./", path_to_tomita = "./tomita-parser"):
         res.append(find_res[0])
     return res
 
-def analyse_text_with_tomita(text, base_path = "./", path_to_tomita = "./tomita-parser", rewrite_config=True):
-    input_file_name = base_path+"input_py"
-    output_file_name = base_path+"output_py"
-    config_file_name = base_path+"config_py.proto"
+def analyse_text_with_tomita(text, path_to_tomita = "./tomita-parser", rewrite_config=True):
+    input_file_name = "./input_py"
+    output_file_name = "./output_py"
+    config_file_name = "./config_py.proto"
     if rewrite_config:
         config_content = """
 encoding "utf8";
@@ -66,15 +66,9 @@ TTextMinerConfig {
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         PATH_TO_TOMITA = "./tomita-parser"
-        BASE_PATH = "./"
-    elif len(sys.argv) == 2:
-        PATH_TO_TOMITA = sys.argv[1]
-        BASE_PATH = "./"
     else:
         PATH_TO_TOMITA = sys.argv[1]
-        BASE_PATH = sys.argv[2]
     print("Путь к томите: " + PATH_TO_TOMITA)
-    print("Путь к файлам грамматики: " + BASE_PATH)
     con = init_sync()
     print("Начинаю обрабатывать...")
     with con.cursor() as cur:
