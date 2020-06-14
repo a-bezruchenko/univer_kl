@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <title>Компьютерная лингвистика</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 
 <header class="header">
-    <h1>Предложения с упоминанием персон и их тональность </h1>
+    <h1 class="text-center">Предложения с упоминанием персон и их тональность </h1>
 </header>
 
 <main>
-    <div class="content">
+    <div class="pagination-page-info d-flex justify-content-center">
+        {{ pagination.links }}
+    </div>
+    <div class="container mt-3">
         {% for element in elements %}
         <div class="article">
             <b>{{ element[0] }} </b>
@@ -20,6 +23,9 @@
         </div>
         <hr>
         {% endfor %}
+    </div>
+    <div class="pagination-page-info d-flex justify-content-center">
+        {{ pagination.links }}
     </div>
 </main>
 

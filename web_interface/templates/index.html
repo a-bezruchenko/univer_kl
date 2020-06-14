@@ -2,34 +2,44 @@
 <html lang="en">
 <head>
     <title>Компьютерная лингвистика</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 
 <header class="header">
-    <h1>Контрольная работа по предмету "Компьютерная лингвистика". </h1>
+    <h1 class="text-center">Контрольная работа по предмету "Компьютерная лингвистика". </h1>
 </header>
 
 <main>
-     <div class="info">
+     <div class="d-flex justify-content-around">
         <div class="tonality">
-            <button class="getTonality" onclick="location.href = '/getTonality'">Просмотр тональности предложений</button>
+            <button class="btn btn-outline-primary" onclick="location.href = '/getTonality'">Просмотр тональности предложений</button>
         </div>
 
         <div class="synonyms">
-            <button class="getSynonyms" onclick="location.href = '/getSynonyms'">Поиск контекстных синонимов</button>
+            <button class="btn btn-outline-secondary" onclick="location.href = '/getSynonyms'">Поиск контекстных синонимов</button>
         </div>
     </div>
-    <h2>Статьи с сайта <a href="https://v1.ru/"> v1.ru </a> : </h2>
-    <div class="articles">
-
-        {% for article in articles %}
-        <div class="article">
-            <a href= "https://v1.ru{{ article[0] }}"> {{ article[1] }}</a>
-            <p>{{ article[5] }} </p>
+    <div class="container mt-auto">
+        <h2 class="text-center">Статьи с сайта <a href="https://v1.ru/"> v1.ru </a> : </h2>
+        <div class="articles">
+            <div class="pagination-page-info d-flex justify-content-center">
+                {{ pagination.links }}
+            </div>
+            {% for article in articles %}
+            <div class="article">
+                <div class="d-flex justify-content-between">
+                    <a href= "https://v1.ru{{ article[0] }}"> {{ article[1] }}</a>
+                    <time>{{ article[2] }}</time>
+                </div>
+                <p>{{ article[5] }} </p>
+            </div>
+            <hr>
+            {% endfor %}
         </div>
-        <hr>
-        {% endfor %}
+        <div class="pagination-page-info d-flex justify-content-center">
+            {{ pagination.links }}
+        </div>
     </div>
 </main>
 
